@@ -1,26 +1,18 @@
 ﻿import tempfile
 import wget
-import zipfile
-from pathlib import PurePath
 
-def path_of_files(link):
+import gzip
+import shutil
 
-    gzipped_file = tempfile.NamedTemporaryFile()
+# скачивает архив по ссылке, распаковывает архив и возвращает путь к распакованному файлу
+def path_of_file(link):
 
-    wget.download(link, gzipped_file.name)
+    gzipped_file  = wget.download(link)
 
-    temp_dir_path = tempfile.mkdtemp()
+    ungzipped_file = tempfile.NamedTemporaryFile(delete=False)
 
-    zip = zipfile.ZipFile(gzipped_file.name)
-    zip.extractall(temp_dir_path)
-    list_of_files = zip.namelist()
+    with gzip.open(gzipped_file, 'rb') as f_in:
+        with open(ungzipped_file.name, 'wb') as f_out:
+            shutil.copyfileobj(f_in, f_out)
 
-    zip.close
-    gzipped_file.close
-
-    list_of_path = []
-    for file_name in list_of_files:
-        path = str(PurePath(temp_der_path, file_name))
-        list_of_path.append(path)
-
-return(list_of_path)
+    return(ungzipped_file.name)

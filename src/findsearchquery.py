@@ -18,7 +18,5 @@ def finder(pathtofile):
             listofall.append([res.group(1), f])
 
         except AttributeError:
-            listofall.append("Nothing found")
-            print("Query for number" + " " + s + " " + "not found :(")
+            listofall.append(None)
     return(listofall)
-
